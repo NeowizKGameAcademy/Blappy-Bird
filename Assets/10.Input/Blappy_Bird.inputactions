@@ -1,0 +1,79 @@
+{
+    "version": 1,
+    "name": "Blappy_Bird",
+    "maps": [
+        {
+            "name": "Move",
+            "id": "6bd411da-d7bf-428b-8ecb-7d9d27802169",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Value",
+                    "id": "c86cced9-b1b5-41c4-a2bb-54f950848a1c",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "2D Vector",
+                    "id": "e861da5a-bf55-477b-8407-6733395e723e",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "ace80928-068c-4347-89d7-bf09be12a189",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "e1209e7e-08a4-4c2e-a623-e0fd2bd3e97c",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "2c5ea7e0-1a47-4b70-aeff-95c24702be2b",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "ee5e8674-3f47-49eb-aec7-94eca9b88d19",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
