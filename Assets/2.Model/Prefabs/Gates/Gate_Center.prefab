@@ -453,7 +453,7 @@ GameObject:
   m_Component:
   - component: {fileID: 531657951291704582}
   - component: {fileID: 6749382514465096241}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Passzone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
