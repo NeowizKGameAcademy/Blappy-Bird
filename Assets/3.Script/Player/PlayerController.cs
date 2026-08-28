@@ -18,15 +18,17 @@ public sealed class PlayerController : MonoBehaviour, IRunResettable
 {
     [Header("References")]
     [SerializeField] private PlayerMovementConfig config;
-    [SerializeField] private Animator animator;
-
-    private static readonly int IsFalling = Animator.StringToHash("isFalling");
 
     private Rigidbody rb;
     private Vector3 startPosition;
 
     private float verticalVelocity;
     private float horizontalVelocity;
+
+    /// <summary>표현 계층(PlayerAnimationController)이 읽는다. 물리에는 영향 없음.</summary>
+    public float VerticalVelocity => verticalVelocity;
+    public float HorizontalVelocity => horizontalVelocity;
+    public float MaxHorizontalSpeed => config != null ? config.maxHorizontalSpeed : 1f;
 
     // Update에서 채우고 FixedUpdate에서 소비한다
     private bool flapQueued;
@@ -39,8 +41,6 @@ public sealed class PlayerController : MonoBehaviour, IRunResettable
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
-
-        if (animator == null) TryGetComponent(out animator);
         startPosition = transform.position;
     }
 
@@ -56,8 +56,6 @@ public sealed class PlayerController : MonoBehaviour, IRunResettable
             if (kb.leftArrowKey.isPressed || kb.aKey.isPressed) horizontalInput -= 1f;
             if (kb.rightArrowKey.isPressed || kb.dKey.isPressed) horizontalInput += 1f;
         }
-
-        if (animator != null) animator.SetBool(IsFalling, verticalVelocity < 0f);
     }
 
     private void FixedUpdate()
@@ -96,6 +94,15 @@ public sealed class PlayerController : MonoBehaviour, IRunResettable
         // Flap으로 설정한 상승 속도까지 지워버리는 버그가 있었다.
         Vector3 pos = rb.position;
         Vector3 next = pos + new Vector3(horizontalVelocity, verticalVelocity, 0f) * dt;
+
+        // 바닥은 차단이 아니라 사망이다. 좌우와 천장만 막는다.
+        if (next.y <= config.MinY)
+        {
+            gm.EndGame();
+            rb.linearVelocity = Vector3.zero;
+            return;
+        }
+
         Vector3 clamped = PlayArea.Clamp(next, config);
         if (!Mathf.Approximately(clamped.x, next.x)) horizontalVelocity = (clamped.x - pos.x) / dt;
         if (!Mathf.Approximately(clamped.y, next.y)) verticalVelocity = (clamped.y - pos.y) / dt;
