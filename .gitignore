@@ -104,3 +104,8 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# Dev 전용 테스트 씬 (커밋하지 않음)
+# 각 feature 브랜치가 로컬 검증용으로 쓰고, GameScene은 통합 담당자만 수정한다.
+/[Aa]ssets/1.Scene/Dev/
+/[Aa]ssets/1.Scene/Dev.meta
