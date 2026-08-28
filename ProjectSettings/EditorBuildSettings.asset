@@ -9,11 +9,14 @@ EditorBuildSettings:
     path: Assets/1.Scene/MainScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/1.Scene/GameScene.unity
-    guid: 3f92e4d7b8b4ac64a85865a7b7b52df9
+    path: Assets/1.Scene/Dev/IntroSandbox.unity
+    guid: 5120612a357215c4c9a8a8da4c8f9acd
   - enabled: 1
-    path: Assets/1.Scene/RankingScene.unity
-    guid: 10c8f26471de42844ab294739e3c59e4
+    path: Assets/1.Scene/Dev/ScrollSandbox.unity
+    guid: 0f60721767dd94945a21ed854da79718
+  - enabled: 1
+    path: Assets/1.Scene/Dev/RankingSandbox.unity
+    guid: 9a42bf3f5b352304a8d3880fed3b7789
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

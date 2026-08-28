@@ -76,7 +76,11 @@ public sealed class GameManager : MonoBehaviour
     public void LoadGameScene()    => LoadScene("GameScene");
     public void LoadRankingScene() => LoadScene("RankingScene");
 
-    private void LoadScene(string sceneName)
+    /// <summary>
+    /// 이름으로 씬 전환. Dev 샌드박스처럼 정식 3씬이 아닌 씬으로도
+    /// 전환할 수 있도록 public이다. timeScale과 상태를 함께 정리한다.
+    /// </summary>
+    public void LoadScene(string sceneName)
     {
         if (TimeScaleManager.Instance != null) TimeScaleManager.Instance.ResetRun();
         CurrentState = GameState.Ready;
