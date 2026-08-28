@@ -89,12 +89,18 @@ public sealed class GameManager : MonoBehaviour   // DontDestroyOnLoad
 # 3. TimeScale (2C)
 
 ```csharp
+public enum TimeScaleChannel { Pause, HitStop, TimeSlow }
+
 public sealed class TimeScaleManager : MonoBehaviour
 {
     public static TimeScaleManager Instance { get; }
 
-    public float Current            { get; }
-    public bool  IsTimeSlowActive   { get; }
+    public float Current          { get; }   // 활성 채널의 최솟값
+    public bool  IsTimeSlowActive { get; }
+    public bool  IsPaused         { get; }
+
+    public void  Set(TimeScaleChannel channel, float scale);   // 1f가 해제
+    public float Get(TimeScaleChannel channel);
 
     public void SetPaused(bool value);      // GameManager 전용
     public void SetTimeSlow(float scale);   // 4A. 해제는 1f
@@ -104,9 +110,29 @@ public sealed class TimeScaleManager : MonoBehaviour
 
 **어떤 클래스도 `Time.timeScale`에 직접 쓰지 않습니다.** 이 클래스가 유일한 소유자입니다.
 
-우선순위: `Paused(0)` > `TimeSlow(0.5~0.65)` > `Normal(1)`
+## 채널이 셋입니다
 
-Time Slow 도중 Pause를 눌러도 Resume 시 Time Slow 배율이 복원됩니다. 검증 완료.
+느리게 만드는 소스가 둘이므로 슬롯 하나로는 부족합니다.
+
+- **희망의 날갯짓** (§10) — `Q` 입력, 게이지 100, 약 2초, 0.5~0.65
+- **피격 히트스톱** (§6) — 0.1~0.15초
+
+채널마다 독립적으로 배율을 요청하고, **실제 적용은 활성 채널의 최솟값**입니다.
+최솟값 규칙 하나로 우선순위가 해결되므로 별도 우선순위 표가 필요 없습니다.
+
+| 상황 | Pause | HitStop | TimeSlow | 적용 |
+|---|---|---|---|---|
+| 평상시 | 1 | 1 | 1 | **1** |
+| Time Slow | 1 | 1 | 0.6 | **0.6** |
+| Slow 중 피격 | 1 | 0.1 | 0.6 | **0.1** |
+| 피격 중 Pause | 0 | 0.1 | 0.6 | **0** |
+| Pause 해제 | 1 | 0.1 | 0.6 | **0.1** |
+
+채널이 서로를 덮어쓰지 않으므로 **히트스톱이 끝나도 진행 중이던 Time Slow의 남은 시간이 유지됩니다.**
+단일 슬롯 구조였다면 2초짜리 Time Slow가 0.15초 만에 풀렸습니다.
+
+`SetPaused`와 `SetTimeSlow`는 `Set(channel, scale)`의 편의 메서드입니다.
+히트스톱은 `Set(TimeScaleChannel.HitStop, 0.1f)`로 요청하고 `1f`로 해제합니다.
 
 ## GameOver를 우선순위에서 뺐습니다
 
