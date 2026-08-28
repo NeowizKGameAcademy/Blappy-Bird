@@ -104,6 +104,9 @@ MonoBehaviour:
   spawnZ: 100
   spawnInterval: 3.5
   prewarmPerPrefab: 4
+  happinessPrefab: {fileID: 2289606247733844394, guid: 01fa7bdf2b67aed478d2c0d3ee47e77c, type: 3}
+  happinessPerGap: 3
+  zoneSize: 10
 --- !u!114 &8582905147589803909
 MonoBehaviour:
   m_ObjectHideFlags: 0

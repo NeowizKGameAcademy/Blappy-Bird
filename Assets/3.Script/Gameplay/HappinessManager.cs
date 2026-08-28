@@ -7,7 +7,20 @@ using UnityEngine;
 /// </summary>
 public sealed class HappinessManager : MonoBehaviour, IRunResettable
 {
+    public static HappinessManager Instance { get; private set; }
+
     public int Current { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+    }
 
     /// <summary>HUD가 구독한다 (기획서 17: 수집 이벤트 발생 시 갱신).</summary>
     public event Action<int> OnChanged;

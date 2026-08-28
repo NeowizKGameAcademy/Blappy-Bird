@@ -36,6 +36,14 @@ public sealed class PlayerCollision : MonoBehaviour
         var gm = GameManager.Instance;
         if (gm == null || !gm.IsPlaying) return;
 
+        // 수집물 (기획서 5: 장애물/수집물 Trigger 분기)
+        var collectible = other.GetComponentInParent<HappinessCollectible>();
+        if (collectible != null)
+        {
+            collectible.Collect();
+            return;
+        }
+
         if (other.gameObject.layer == passzoneLayer && skill != null)
             skill.AddPassGauge();
     }
