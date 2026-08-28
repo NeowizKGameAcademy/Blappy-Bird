@@ -94,7 +94,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleSpawner
   gatePrefabs:
-  - {fileID: 2960634293766990052, guid: ead6ac76f7864b84ba1e60688bd75aff, type: 3}
+  - {fileID: 1330226830847675184, guid: 79894bf459cf2c947b6a5df718e25744, type: 3}
+  - {fileID: 2445483542941195008, guid: 2c049b7d8618f4b4396ddef4b8fdb664, type: 3}
+  - {fileID: 2438949530050578991, guid: 9abdc6ba25aa9ba428e9254c6d87f50e, type: 3}
   spawnZ: 100
   spawnInterval: 3
   prewarmPerPrefab: 4
