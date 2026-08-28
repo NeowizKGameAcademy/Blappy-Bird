@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 1002}
   - component: {fileID: 1003}
   - component: {fileID: 1004}
+  - component: {fileID: 2856048639866139974}
+  - component: {fileID: 2370414337936881525}
   m_Layer: 0
   m_Name: WorldSystems
   m_TagString: Untagged
@@ -65,3 +67,34 @@ MonoBehaviour:
   activeChunkCount: 4
   startZ: -40
   recycleZ: -80
+--- !u!114 &2856048639866139974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc645af377ef14440abd72b60a969570, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PoolManager
+  defaultCapacity: 8
+  maxSize: 64
+--- !u!114 &2370414337936881525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b55530f7252ae674da51c121e6080fc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObstacleSpawner
+  gatePrefabs:
+  - {fileID: 2960634293766990052, guid: ead6ac76f7864b84ba1e60688bd75aff, type: 3}
+  spawnZ: 100
+  spawnInterval: 3
+  prewarmPerPrefab: 4
