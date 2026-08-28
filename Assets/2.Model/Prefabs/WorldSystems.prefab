@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1004}
   - component: {fileID: 2856048639866139974}
   - component: {fileID: 2370414337936881525}
+  - component: {fileID: 8582905147589803909}
   m_Layer: 0
   m_Name: WorldSystems
   m_TagString: Untagged
@@ -100,3 +101,69 @@ MonoBehaviour:
   spawnZ: 100
   spawnInterval: 3
   prewarmPerPrefab: 4
+--- !u!114 &8582905147589803909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4485a496267497c428d0c4c5e330fc46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldSpeedRamp
+  baseSpeed: 9
+  maxSpeed: 14
+  rampDuration: 180
+  rampShape:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1.497006
+      outSlope: 1.497006
+      tangentMode: 35
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.167
+      value: 0.25
+      inSlope: 1.2003102
+      outSlope: 1.2003102
+      tangentMode: 35
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.333
+      value: 0.4
+      inSlope: 0.900909
+      outSlope: 0.900909
+      tangentMode: 35
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.667
+      value: 0.7
+      inSlope: 0.8995522
+      outSlope: 0.8995522
+      tangentMode: 35
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.9009009
+      outSlope: 0.9009009
+      tangentMode: 35
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
