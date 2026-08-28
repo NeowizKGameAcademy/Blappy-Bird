@@ -5,11 +5,10 @@ using UnityEngine;
 ///
 /// 기획서 13은 구간별 Stage로 정의했지만(0~30초 9 m/s ... 180초+ 13~14 m/s),
 /// Stage 테이블 없이 연속 램프로 같은 곡선을 만든다.
-/// 나중에 DifficultyManager(3)가 들어오면 이 컴포넌트를 빼고
-/// 같은 자리에서 SetSpeed를 호출하면 된다. 계약은 그대로다.
 ///
-/// 경과 시간은 스케일된 시간을 쓴다. Time Slow 중에는 난이도 상승도 함께 느려지고,
-/// 기획서 15의 SurvivalTimer(deltaTime 누적)와도 기준이 같아진다.
+/// 시간의 소유자는 SurvivalTimer 하나다. 난이도가 곧 생존 시간이므로
+/// 여기서 시간을 따로 세지 않고 타이머를 읽는다. HUD의 TIME과
+/// 기록 저장(RankingManager)도 같은 타이머를 쓴다.
 /// </summary>
 [RequireComponent(typeof(WorldScrollManager))]
 public sealed class WorldSpeedRamp : MonoBehaviour, IRunResettable
@@ -21,40 +20,34 @@ public sealed class WorldSpeedRamp : MonoBehaviour, IRunResettable
     [Tooltip("이 시간(초)에 maxSpeed에 도달한다.")]
     [SerializeField] private float rampDuration = 180f;
 
-    [Tooltip("가속 형태. 기본은 선형. 후반을 급하게 하려면 곡선을 조정한다.")]
+    [Tooltip("가속 형태. 기획서 13 구간에 맞춘 곡선을 인스펙터에서 조정한다.")]
     [SerializeField] private AnimationCurve rampShape = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
-    private WorldScrollManager scroll;
-    private float elapsed;
+    [Tooltip("비워두면 같은 오브젝트에서 찾는다.")]
+    [SerializeField] private SurvivalTimer timer;
 
-    /// <summary>Playing 상태에서 누적된 시간. 표시용.</summary>
-    public float Elapsed => elapsed;
+    private WorldScrollManager scroll;
 
     private void Awake()
     {
         scroll = GetComponent<WorldScrollManager>();
-        Apply();
+        if (timer == null) TryGetComponent(out timer);
+        Apply(0f);
     }
 
     private void FixedUpdate()
     {
-        if (scroll == null || !scroll.IsScrolling) return;
-
-        elapsed += Time.fixedDeltaTime;
-        Apply();
+        if (scroll == null || timer == null || !scroll.IsScrolling) return;
+        Apply(timer.CurrentTime);
     }
 
-    public void ResetRun()
-    {
-        elapsed = 0f;
-        Apply();
-    }
+    public void ResetRun() => Apply(0f);
 
-    private void Apply()
+    private void Apply(float time)
     {
         if (scroll == null) return;
 
-        float t = rampDuration <= 0f ? 1f : Mathf.Clamp01(elapsed / rampDuration);
+        float t = rampDuration <= 0f ? 1f : Mathf.Clamp01(time / rampDuration);
         float shaped = rampShape != null ? rampShape.Evaluate(t) : t;
 
         scroll.SetSpeed(Mathf.Lerp(baseSpeed, maxSpeed, shaped));

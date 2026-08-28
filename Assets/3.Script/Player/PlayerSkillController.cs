@@ -1,0 +1,83 @@
+using System.Collections;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+/// <summary>
+/// 게이지 소비와 스킬 발동 (기획서 10).
+/// Time.timeScale은 직접 만지지 않고 TimeScaleManager의 TimeSlow 채널만 쓴다.
+/// Shield는 준비 상태(CanUseShield)만 노출한다 - 소비 분기는 4A가 PlayerCollision에 붙인다.
+/// </summary>
+public sealed class PlayerSkillController : MonoBehaviour, IRunResettable
+{
+    [SerializeField] private PlayerSkillConfig config;
+    [SerializeField] private GaugeController gauge = new GaugeController();
+
+    private Coroutine timeSlowRoutine;
+
+    public float Gauge => gauge.Current;
+    public float GaugeNormalized => config != null ? gauge.Current / config.maxGauge : 0f;
+    public bool IsTimeSlowActive => timeSlowRoutine != null;
+    public bool CanUseTimeSlow => config != null && gauge.Current >= config.timeSlowCost && !IsTimeSlowActive;
+    public bool CanUseShield => config != null && gauge.Current >= config.shieldCost;
+
+    /// <summary>HUD 바인딩용 (기획서 17). 게이지가 변하면 READY 상태도 다시 계산하면 된다.</summary>
+    public event System.Action<float> OnGaugeChanged;
+
+    private void OnEnable() => gauge.OnChanged += RaiseGaugeChanged;
+    private void OnDisable() => gauge.OnChanged -= RaiseGaugeChanged;
+    private void RaiseGaugeChanged(float v) => OnGaugeChanged?.Invoke(v);
+
+    private void Update()
+    {
+        var kb = Keyboard.current;
+        if (kb != null && kb.qKey.wasPressedThisFrame)
+            TryActivateTimeSlow();
+    }
+
+    /// <summary>Passzone 통과 충전. PlayerCollision이 호출한다.</summary>
+    public void AddPassGauge()
+    {
+        if (config == null) return;
+        gauge.Add(config.passZoneGain, config.maxGauge);
+    }
+
+    /// <summary>Perfect/NearMiss 판정(4A)이 호출할 범용 충전.</summary>
+    public void AddGauge(float amount)
+    {
+        if (config == null) return;
+        gauge.Add(amount, config.maxGauge);
+    }
+
+    public bool TryActivateTimeSlow()
+    {
+        var gm = GameManager.Instance;
+        if (gm == null || !gm.IsPlaying) return false;          // 기획서 10.1: Playing 검사
+        if (!CanUseTimeSlow) return false;
+        if (!gauge.TrySpend(config.timeSlowCost)) return false;
+
+        timeSlowRoutine = StartCoroutine(TimeSlowRoutine());
+        return true;
+    }
+
+    private IEnumerator TimeSlowRoutine()
+    {
+        TimeScaleManager.Instance.SetTimeSlow(config.timeSlowScale);
+        // scaled 시간 대기: Pause(timeScale 0) 중에는 스킬 시간도 함께 멈춘다
+        yield return new WaitForSeconds(config.timeSlowDuration * config.timeSlowScale);
+        EndTimeSlow();
+    }
+
+    private void EndTimeSlow()
+    {
+        if (timeSlowRoutine != null) StopCoroutine(timeSlowRoutine);
+        timeSlowRoutine = null;
+        if (TimeScaleManager.Instance != null)
+            TimeScaleManager.Instance.SetTimeSlow(1f);
+    }
+
+    public void ResetRun()
+    {
+        EndTimeSlow();
+        gauge.ResetRun();
+    }
+}

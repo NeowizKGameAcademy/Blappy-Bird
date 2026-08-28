@@ -405,6 +405,8 @@ GameObject:
   - component: {fileID: 2089165950549213041}
   - component: {fileID: 6992147783545722342}
   - component: {fileID: 2798410669155592427}
+  - component: {fileID: 1190010605760355557}
+  - component: {fileID: 303907354298993299}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -529,6 +531,34 @@ MonoBehaviour:
   animator: {fileID: 1797371032998939058}
   maxRollDegrees: 8
   rollResponse: 10
+--- !u!114 &1190010605760355557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3137022364865087612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20deeac2b4b96ea4fa787b60ffe28f6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillController
+  config: {fileID: 11400000, guid: a384177dd425b9945a3ce37853ce4b34, type: 2}
+  gauge:
+    current: 0
+--- !u!114 &303907354298993299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3137022364865087612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88f7159459cc37b448ed692db9a3341a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCollision
+  skill: {fileID: 1190010605760355557}
 --- !u!1 &4004171381753696157
 GameObject:
   m_ObjectHideFlags: 0

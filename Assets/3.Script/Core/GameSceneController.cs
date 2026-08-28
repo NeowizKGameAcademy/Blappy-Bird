@@ -39,6 +39,19 @@ public sealed class GameSceneController : MonoBehaviour
             GameManager.Instance.OnStateChanged -= HandleStateChanged;
     }
 
+    private void Update()
+    {
+        // Pause 토글 (기획서 16의 Pause Popup 진입점. 4 입력 표에는 빠져 있던 키)
+        var kb = UnityEngine.InputSystem.Keyboard.current;
+        if (kb == null || !kb.escapeKey.wasPressedThisFrame) return;
+
+        var gm = GameManager.Instance;
+        if (gm == null) return;
+
+        if (gm.CurrentState == GameState.Playing) gm.PauseGame();
+        else if (gm.CurrentState == GameState.Paused) gm.ResumeGame();
+    }
+
     /// <summary>
     /// Dev 씬처럼 GameManager가 없는 씬에서도 단독 실행할 수 있게 한다.
     /// 정식 흐름에서는 MainScene이 이미 만들어 DontDestroyOnLoad로 넘겨준다.

@@ -110,15 +110,7 @@ public sealed class PlayerController : MonoBehaviour, IRunResettable
         rb.linearVelocity = new Vector3(horizontalVelocity, verticalVelocity, 0f);
     }
 
-    /// <summary>
-    /// 게이트와 충돌하면 GameOver. Shield(4A)가 붙으면 여기서
-    /// TryConsumeShield를 먼저 호출하는 분기가 들어간다.
-    /// </summary>
-    private void OnCollisionEnter(Collision collision)
-    {
-        var gm = GameManager.Instance;
-        if (gm != null && gm.IsPlaying) gm.EndGame();
-    }
+    // 충돌 분기는 PlayerCollision이 담당한다 (기획서 5의 책임 분리)
 
     public void ResetRun()
     {
