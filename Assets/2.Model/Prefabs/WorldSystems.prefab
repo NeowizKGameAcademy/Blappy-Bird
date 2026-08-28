@@ -59,7 +59,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scroll: {fileID: 1003}
-  chunkPrefabs: []
+  chunkPrefabs:
+  - {fileID: 2001, guid: 7d2e91c4b8a3f5406e1b9c8d2a4f7301, type: 3}
   chunkLength: 40
   activeChunkCount: 4
   startZ: -40
