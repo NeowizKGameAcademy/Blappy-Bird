@@ -99,7 +99,7 @@ MonoBehaviour:
   - {fileID: 2445483542941195008, guid: 2c049b7d8618f4b4396ddef4b8fdb664, type: 3}
   - {fileID: 2438949530050578991, guid: 9abdc6ba25aa9ba428e9254c6d87f50e, type: 3}
   spawnZ: 100
-  spawnInterval: 3
+  spawnInterval: 3.5
   prewarmPerPrefab: 4
 --- !u!114 &8582905147589803909
 MonoBehaviour:

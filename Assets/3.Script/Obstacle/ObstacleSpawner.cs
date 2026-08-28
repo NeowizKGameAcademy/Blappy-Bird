@@ -18,7 +18,7 @@ public sealed class ObstacleSpawner : MonoBehaviour, IRunResettable
     [SerializeField] private float spawnZ = 100f;
 
     [Tooltip("스폰 간격(초).")]
-    [SerializeField] private float spawnInterval = 3f;
+    [SerializeField] private float spawnInterval = 3.5f;
 
     [Tooltip("프리팹당 미리 만들어둘 개수. 첫 스폰의 프레임 스파이크를 막는다.")]
     [SerializeField] private int prewarmPerPrefab = 4;

@@ -29,7 +29,7 @@ public sealed class WorldScrollManager : MonoBehaviour, IRunResettable
     public bool  IsScrolling  { get; }
     public float FixedScrollDelta { get; }   // 정지 중에는 0
 
-    public void SetSpeed(float speed);       // 3  DifficultyManager
+    public void SetSpeed(float speed);       // WorldSpeedRamp
     public void StartScroll();               // 2C GameSceneController
     public void StopScroll();                // 2C GameSceneController
     public void ResetRun();                  // Retry
@@ -40,6 +40,35 @@ public sealed class WorldScrollManager : MonoBehaviour, IRunResettable
 소비자는 이 값만 쓰면 되고 정지 상태를 따로 검사할 필요가 없습니다.
 
 `WorldChunkManager`는 배경 Chunk 순환만 담당하며 외부에서 참조할 일이 없습니다.
+
+## 속도는 생존 시간으로만 정해집니다
+
+난이도 시스템은 두지 않습니다. `WorldSpeedRamp`가 경과 시간에 따라 `SetSpeed`를 호출하는 것이 전부입니다.
+
+```csharp
+public sealed class WorldSpeedRamp : MonoBehaviour, IRunResettable
+{
+    public float Elapsed { get; }   // Playing 중 누적
+    // baseSpeed 9 -> maxSpeed 14, rampDuration 180초
+    // rampShape(AnimationCurve)로 형태 조정
+}
+```
+
+곡선은 기획서 §13 구간에 맞춰뒀습니다. 조정은 인스펙터에서 곡선만 끌면 되고 코드는 바뀌지 않습니다.
+
+| 시점 | 속도 | 기획서 §13 |
+|---|---|---|
+| 0초 | 9.00 | 9 |
+| 30초 | 10.25 | 10~10.5 |
+| 60초 | 11.00 | 10~12 |
+| 120초 | 12.50 | 11~13 |
+| 180초+ | 14.00 | 13~14 |
+
+경과 시간은 **스케일된 시간**입니다. Time Slow 중에는 난이도 상승도 함께 느려지고,
+기획서 §15의 `SurvivalTimer`(`deltaTime` 누적)와 기준이 같습니다.
+
+`WorldScrollManager` 자체는 램프를 알지 못합니다. `SetSpeed`가 유일한 접점이라
+속도 정책을 바꾸고 싶으면 이 컴포넌트만 교체하면 됩니다.
 
 ---
 
@@ -158,11 +187,10 @@ public interface IRunResettable
 
 | 브랜치 | ResetRun에서 되돌릴 것 | 상태 |
 |---|---|---|
-| 2B | 스크롤 속도, Chunk 시작 배치 | 구현됨 |
+| 2B | 스크롤 속도, 속도 램프 경과 시간, Chunk 시작 배치 | 구현됨 |
+| 1C · 3 | 활성 게이트 Pool 반환, 스폰 타이머 | 구현됨 |
 | 1A | Player X/Y 위치와 속도, 수직 속도 | 필요 |
 | 1B | 카메라 위치 | 필요 |
-| 2A · 1C | 활성 장애물 · 수집물 Pool 반환 | 필요 |
-| 3 | Spawner 최근 패턴 기록, 난이도 Stage | 필요 |
 | 4A | 게이지, Shield 준비 상태, 무적 타이머 | 필요 |
 | 4B | SurvivalTimer, Happiness | 필요 |
 
@@ -210,7 +238,7 @@ PoolManager.Instance.Get(prefab, new Vector3(0f, 0f, spawnZ));
 | 설정 | 값 |
 |---|---|
 | `spawnZ` | 100 |
-| `spawnInterval` | 3초 |
+| `spawnInterval` | 3.5초 |
 | `prewarmPerPrefab` | 4 |
 
 ## 게이트 저작 규칙
@@ -226,13 +254,13 @@ PoolManager.Instance.Get(prefab, new Vector3(0f, 0f, spawnZ));
 난이도 스테이지도, 도달 가능 검사도, 구멍 위치 계산도 **의도적으로 넣지 않았습니다.**
 대신 게이트를 만들 때 구멍 위치가 서로 너무 멀지 않게 두십시오.
 
-3초 간격 · 이동 성능(가속 28, 최대 7, flap 6.2, 중력 -18/-11) 기준:
+3.5초 간격 · 이동 성능(가속 28, 최대 7, flap 6.2, 중력 -18/-11) 기준:
 
 | 축 | 도달 가능 |
 |---|---|
-| X | 약 20.1m |
-| Y 상승 | 약 18.6m |
-| Y 하강 | 약 29.6m |
+| X | 약 23.6m |
+| Y 상승 | 약 21.7m |
+| Y 하강 | 약 35.1m |
 
 현재 게이트 3종은 구멍 간 최대 X 14m · Y 12m이라 **어떤 조합이 연속으로 나와도 통과 가능**합니다.
 새 게이트를 추가할 때 이 범위를 넘지 않게 하십시오.
@@ -263,15 +291,11 @@ Rigidbody 설정이 필수입니다. 아래 "주의" 1번을 반드시 확인하
 
 ## 3 obstacle-spawner
 
-기본 스폰과 풀링은 **이미 구현되어 있습니다** (5장 참고).
-난이도를 붙일 때 스크롤 속도와 스폰 간격을 갱신하십시오.
+스폰, 풀링, 속도 램프까지 **모두 구현되어 있습니다** (1장 · 5장 참고).
+난이도는 생존 시간 하나로 정해지므로 별도 작업이 없습니다.
 
-```csharp
-WorldScrollManager.Instance.SetSpeed(stage.scrollSpeed);
-```
-
-간격은 **시간이 아니라 거리 기준**을 권합니다. 3초 고정이면
-9 m/s에서 27m, 14 m/s에서 42m가 되어 속도가 오를수록 오히려 헐거워집니다.
+게이트 종류를 늘리는 것이 남은 일입니다 — 프리팹을 만들어
+`gatePrefabs` 리스트에 추가하면 끝이고, 코드는 바뀌지 않습니다.
 
 ## 4A perfect-skill
 
@@ -343,13 +367,13 @@ Perfect · NearMiss · Pass 트리거가 이보다 얇으면 통과가 누락됩
 GameOver 시 timeScale 유지, Retry 초기화, 30000스텝 후 청크 간격 유지,
 200회 순환에 인스턴스 1개, 게이트 구멍 외 전 영역 차단, 4방향 이동 차단.
 
-## 아직 없는 것
+## 넣지 않기로 한 것
 
-의도적으로 넣지 않았습니다. 필요해지면 그때 붙이는 편이 낫습니다.
+빠뜨린 것이 아니라 결정입니다.
 
-- 난이도 스테이지 / `DifficultyStageData`
-- 스폰 시 도달 가능 검사
-- 배경 패럴랙스 레이어 (`WorldChunkManager`에 `speedMultiplier` 한 줄이면 됩니다)
+- **난이도 스테이지 / `DifficultyStageData`** — 난이도는 생존 시간에 따른 속도 램프 하나로 정합니다
+- **스폰 시 도달 가능 검사** — 통과 가능성은 게이트 저작 단계에서 보장합니다
+- **배경 패럴랙스 레이어** — 필요해지면 `WorldChunkManager`에 `speedMultiplier` 한 줄입니다
 
 ## 씬 수정 규칙
 
