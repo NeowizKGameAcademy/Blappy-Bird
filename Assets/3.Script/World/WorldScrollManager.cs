@@ -8,7 +8,7 @@ using UnityEngine;
 /// 실제 이동은 각 소비자(WorldChunkManager, 장애물 ScrollingObject)가 수행한다.
 /// 소비자가 넷 이상이므로 의존 표면을 최소로 유지한다.
 /// </summary>
-public sealed class WorldScrollManager : MonoBehaviour
+public sealed class WorldScrollManager : MonoBehaviour, IRunResettable
 {
     public static WorldScrollManager Instance { get; private set; }
 

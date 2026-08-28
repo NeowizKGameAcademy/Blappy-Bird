@@ -9,7 +9,7 @@ using UnityEngine;
 /// 기획서 14: 장애물은 Chunk에 고정하지 않고 별도 Spawner/Pool이 관리한다.
 /// 배경 Chunk는 3~6개를 고정 재사용하므로 별도 Pool이 필요 없다.
 /// </summary>
-public sealed class WorldChunkManager : MonoBehaviour
+public sealed class WorldChunkManager : MonoBehaviour, IRunResettable
 {
     [Header("References")]
     [SerializeField] private WorldScrollManager scroll;
