@@ -54,6 +54,7 @@ public sealed class InGameHUDController : MonoBehaviour
         if (skill != null)
         {
             skill.OnGaugeChanged += OnGaugeChanged;
+            skill.OnShieldChanged += RefreshSkillIcons;
             OnGaugeChanged(skill.Gauge);
         }
     }
@@ -62,7 +63,11 @@ public sealed class InGameHUDController : MonoBehaviour
     {
         if (ranking != null) ranking.OnBestTimeChanged -= SetBest;
         if (happiness != null) happiness.OnChanged -= SetHappiness;
-        if (skill != null) skill.OnGaugeChanged -= OnGaugeChanged;
+        if (skill != null)
+        {
+            skill.OnGaugeChanged -= OnGaugeChanged;
+            skill.OnShieldChanged -= RefreshSkillIcons;
+        }
     }
 
     private void Update()
@@ -85,16 +90,26 @@ public sealed class InGameHUDController : MonoBehaviour
     private void OnGaugeChanged(float _)
     {
         if (skill == null) return;
-
         if (gaugeFill != null) gaugeFill.fillAmount = skill.GaugeNormalized;
+        RefreshSkillIcons();
+    }
+
+    private static readonly Color ShieldOn = new Color(0.45f, 0.95f, 1f);
+
+    private void RefreshSkillIcons()
+    {
+        if (skill == null) return;
 
         // 기획서 17: READY 상태는 게이지 임계값 변경 시 갱신 - 글로우 프레임으로 교체
         bool slowReady = skill.CanUseTimeSlow;
-        bool shieldReady = skill.CanUseShield;
 
         if (gaugeFrame != null && frameNormal != null && frameReady != null)
             gaugeFrame.sprite = slowReady ? frameReady : frameNormal;
         if (slowIcon != null) slowIcon.color = slowReady ? Color.white : Dim;
-        if (shieldIcon != null) shieldIcon.color = shieldReady ? Color.white : Dim;
+
+        // 실드: 켜짐(청록 강조) / 발동 가능(흰) / 게이지 부족(어둡게)
+        if (shieldIcon != null)
+            shieldIcon.color = skill.IsShieldActive ? ShieldOn
+                             : skill.CanUseShield ? Color.white : Dim;
     }
 }

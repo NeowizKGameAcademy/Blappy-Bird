@@ -15,6 +15,10 @@ public sealed class PlayerSkillConfig : ScriptableObject
     public float timeSlowDuration = 2f;
     [Range(0.05f, 1f)] public float timeSlowScale = 0.6f;
 
-    [Header("Shield - 희망의 보호막 (기획서 10.2, 동작은 4A)")]
+    [Header("Shield - 희망의 보호막 (기획서 10.2)")]
+    [Tooltip("E 입력으로 발동. 기획서 원문은 충돌 시 자동이지만 팀 결정으로 능동 발동으로 변경")]
     public float shieldCost = 70f;
+
+    [Tooltip("방어 직후 무적 시간. 동일 장애물과의 연속 충돌 방지 (기획서 10.2)")]
+    public float invincibleDuration = 0.5f;
 }

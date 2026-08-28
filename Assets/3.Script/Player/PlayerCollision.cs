@@ -25,7 +25,9 @@ public sealed class PlayerCollision : MonoBehaviour
         var gm = GameManager.Instance;
         if (gm == null || !gm.IsPlaying) return;
 
-        // 4A: 여기서 skill.TryConsumeShield() 성공 시 무적 0.5초 후 return (기획서 10.2)
+        // 보호막(E로 발동)이 켜져 있으면 충돌 1회 무효 + 무적 0.5초 (기획서 10.2)
+        if (skill != null && skill.TryConsumeShield()) return;
+
         gm.EndGame();
     }
 

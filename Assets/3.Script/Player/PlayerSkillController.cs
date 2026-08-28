@@ -13,15 +13,25 @@ public sealed class PlayerSkillController : MonoBehaviour, IRunResettable
     [SerializeField] private GaugeController gauge = new GaugeController();
 
     private Coroutine timeSlowRoutine;
+    private float invincibleUntil;
 
     public float Gauge => gauge.Current;
     public float GaugeNormalized => config != null ? gauge.Current / config.maxGauge : 0f;
     public bool IsTimeSlowActive => timeSlowRoutine != null;
     public bool CanUseTimeSlow => config != null && gauge.Current >= config.timeSlowCost && !IsTimeSlowActive;
-    public bool CanUseShield => config != null && gauge.Current >= config.shieldCost;
+    public bool CanUseShield => config != null && gauge.Current >= config.shieldCost && !IsShieldActive;
+
+    /// <summary>E로 켜둔 보호막이 살아 있는가. 다음 충돌 1회를 무효화한다.</summary>
+    public bool IsShieldActive { get; private set; }
+
+    /// <summary>방어 직후 무적 (기획서 10.2: 동일 장애물 연속 충돌 방지).</summary>
+    public bool IsInvincible => Time.time < invincibleUntil;
 
     /// <summary>HUD 바인딩용 (기획서 17). 게이지가 변하면 READY 상태도 다시 계산하면 된다.</summary>
     public event System.Action<float> OnGaugeChanged;
+
+    /// <summary>보호막 켜짐/소비 시 발화. HUD의 실드 아이콘 상태 전환용.</summary>
+    public event System.Action OnShieldChanged;
 
     private void OnEnable() => gauge.OnChanged += RaiseGaugeChanged;
     private void OnDisable() => gauge.OnChanged -= RaiseGaugeChanged;
@@ -30,8 +40,10 @@ public sealed class PlayerSkillController : MonoBehaviour, IRunResettable
     private void Update()
     {
         var kb = Keyboard.current;
-        if (kb != null && kb.qKey.wasPressedThisFrame)
-            TryActivateTimeSlow();
+        if (kb == null) return;
+
+        if (kb.qKey.wasPressedThisFrame) TryActivateTimeSlow();
+        if (kb.eKey.wasPressedThisFrame) TryActivateShield();
     }
 
     /// <summary>Passzone 통과 충전. PlayerCollision이 호출한다.</summary>
@@ -75,9 +87,40 @@ public sealed class PlayerSkillController : MonoBehaviour, IRunResettable
             TimeScaleManager.Instance.SetTimeSlow(1f);
     }
 
+    /// <summary>E 입력. 게이지 70을 소모해 보호막을 켜둔다.</summary>
+    public bool TryActivateShield()
+    {
+        var gm = GameManager.Instance;
+        if (gm == null || !gm.IsPlaying) return false;
+        if (!CanUseShield) return false;
+        if (!gauge.TrySpend(config.shieldCost)) return false;
+
+        IsShieldActive = true;
+        OnShieldChanged?.Invoke();
+        return true;
+    }
+
+    /// <summary>
+    /// PlayerCollision이 장애물 충돌 직전에 호출한다 (기획서 10.2).
+    /// true면 이번 충돌을 무효화한다. 무적 중 연속 충돌도 여기서 흡수한다.
+    /// </summary>
+    public bool TryConsumeShield()
+    {
+        if (IsInvincible) return true;
+        if (!IsShieldActive) return false;
+
+        IsShieldActive = false;
+        invincibleUntil = Time.time + (config != null ? config.invincibleDuration : 0.5f);
+        OnShieldChanged?.Invoke();
+        return true;
+    }
+
     public void ResetRun()
     {
         EndTimeSlow();
+        IsShieldActive = false;
+        invincibleUntil = 0f;
         gauge.ResetRun();
+        OnShieldChanged?.Invoke();
     }
 }
