@@ -168,7 +168,78 @@ public interface IRunResettable
 
 ---
 
-# 5. 브랜치별 사용법
+# 5. 장애물 스폰과 풀링 (1C + 3)
+
+```csharp
+public sealed class PoolManager : MonoBehaviour
+{
+    public static PoolManager Instance { get; }
+    public int ActiveCount { get; }
+
+    public GameObject Get(GameObject prefab, Vector3 position);
+    public void Release(GameObject instance);
+    public void ReleaseAll();                          // Retry
+    public void Prewarm(GameObject prefab, int count);
+}
+
+public interface IPoolable   // 선택 사항
+{
+    void OnSpawned();
+    void OnDespawned();
+}
+```
+
+되돌릴 상태가 없는 정적 게이트는 `IPoolable`을 구현하지 않아도 됩니다.
+움직이는 게이트가 위상을 초기화해야 할 때만 붙이십시오.
+
+## ScrollingObject
+
+게이트 루트에 붙이면 스크롤에 실려 -Z로 흐르고, 후방 `despawnZ`를 넘으면 **스스로 풀에 돌아갑니다.**
+별도 회수 트리거가 필요 없습니다. Rigidbody 설정은 `Awake`에서 자동으로 잡습니다.
+
+## ObstacleSpawner
+
+```csharp
+var prefab = gatePrefabs[Random.Range(0, gatePrefabs.Count)];
+PoolManager.Instance.Get(prefab, new Vector3(0f, 0f, spawnZ));
+```
+
+리스트에서 무작위로 골라 풀에서 꺼내 전방 중앙에 놓는 것이 전부입니다.
+**스포너는 게이트가 어떻게 생겼는지, 구멍이 어디 있는지 알지 않습니다.**
+
+| 설정 | 값 |
+|---|---|
+| `spawnZ` | 100 |
+| `spawnInterval` | 3초 |
+| `prewarmPerPrefab` | 4 |
+
+## 게이트 저작 규칙
+
+1. 30 × 30 판을 **박스 콜라이더로 타일링**하고 통과할 구멍만 남깁니다
+2. 비볼록 `MeshCollider`는 쓰지 마십시오 — Kinematic Rigidbody에서 충돌이 제대로 안 잡힙니다
+3. 루트에 `Rigidbody` + `ScrollingObject`
+4. 구멍 한가운데에 `HolePoint` 빈 오브젝트
+5. 스포너의 `gatePrefabs` 리스트에 추가
+
+## 통과 가능성은 저작 단계에서 보장합니다
+
+난이도 스테이지도, 도달 가능 검사도, 구멍 위치 계산도 **의도적으로 넣지 않았습니다.**
+대신 게이트를 만들 때 구멍 위치가 서로 너무 멀지 않게 두십시오.
+
+3초 간격 · 이동 성능(가속 28, 최대 7, flap 6.2, 중력 -18/-11) 기준:
+
+| 축 | 도달 가능 |
+|---|---|
+| X | 약 20.1m |
+| Y 상승 | 약 18.6m |
+| Y 하강 | 약 29.6m |
+
+현재 게이트 3종은 구멍 간 최대 X 14m · Y 12m이라 **어떤 조합이 연속으로 나와도 통과 가능**합니다.
+새 게이트를 추가할 때 이 범위를 넘지 않게 하십시오.
+
+---
+
+# 6. 브랜치별 사용법
 
 ## 2A obstacle-core
 
@@ -192,15 +263,15 @@ Rigidbody 설정이 필수입니다. 아래 "주의" 1번을 반드시 확인하
 
 ## 3 obstacle-spawner
 
+기본 스폰과 풀링은 **이미 구현되어 있습니다** (5장 참고).
+난이도를 붙일 때 스크롤 속도와 스폰 간격을 갱신하십시오.
+
 ```csharp
 WorldScrollManager.Instance.SetSpeed(stage.scrollSpeed);
-
-// 도달 가능 검사 (기획서 13.1-5)
-float arrivalTime = spawnDistance / WorldScrollManager.Instance.CurrentSpeed;
 ```
 
-스폰 위치는 플레이어 상대 좌표가 아니라 **월드 상수**입니다. `z = +45~55` 고정.
-Despawn도 후방 고정 평면(`z < -15` 등)으로 처리하면 됩니다.
+간격은 **시간이 아니라 거리 기준**을 권합니다. 3초 고정이면
+9 m/s에서 27m, 14 m/s에서 42m가 되어 속도가 오를수록 오히려 헐거워집니다.
 
 ## 4A perfect-skill
 
@@ -218,7 +289,7 @@ TimeScaleManager.Instance.SetTimeSlow(1f);     // 해제
 
 ---
 
-# 6. 주의
+# 7. 주의
 
 ## 1. 장애물에 Kinematic Rigidbody + ContinuousSpeculative
 
@@ -256,17 +327,29 @@ Perfect · NearMiss · Pass 트리거가 이보다 얇으면 통과가 누락됩
 
 ---
 
-# 7. 현재 상태
+# 8. 현재 상태
 
 ## 구현 완료
 
 - `WorldScrollManager`, `WorldChunkManager` — 청크 순환, 누적 오차 없음
 - `GameManager`, `GameState`, `TimeScaleManager`, `GameSceneController`, `IRunResettable`
+- `PoolManager`, `IPoolable`, `ScrollingObject`, `ObstacleSpawner`
+- `PlayerMovementConfig`, `PlayArea` — 이동 성능과 30 × 30 차단 영역
 - `WorldSystems.prefab` — 매니저 묶음. GameScene 배치는 통합 담당자 몫
-- `Chunk_Placeholder.prefab` + URP 머티리얼 2종 — 6B에서 교체될 임시 아트
+- `Chunk_Placeholder.prefab`, `Gate_Center` / `Gate_UpperLeft` / `Gate_LowerRight`
+  + URP 머티리얼 2종 — 6B에서 교체될 임시 아트
 
-배치모드 검증 31항목 통과: 상태 전환, Pause/TimeSlow 우선순위,
-GameOver 시 timeScale 유지, Retry 초기화, 30000스텝 후 청크 간격 유지.
+배치모드 검증 **81항목 통과**: 상태 전환, Pause/HitStop/TimeSlow 채널,
+GameOver 시 timeScale 유지, Retry 초기화, 30000스텝 후 청크 간격 유지,
+200회 순환에 인스턴스 1개, 게이트 구멍 외 전 영역 차단, 4방향 이동 차단.
+
+## 아직 없는 것
+
+의도적으로 넣지 않았습니다. 필요해지면 그때 붙이는 편이 낫습니다.
+
+- 난이도 스테이지 / `DifficultyStageData`
+- 스폰 시 도달 가능 검사
+- 배경 패럴랙스 레이어 (`WorldChunkManager`에 `speedMultiplier` 한 줄이면 됩니다)
 
 ## 씬 수정 규칙
 
