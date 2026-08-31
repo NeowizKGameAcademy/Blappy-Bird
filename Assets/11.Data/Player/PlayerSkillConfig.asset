@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f99a55bd8d617741bdc5bcecd25bbe7, type: 3}
   m_Name: PlayerSkillConfig
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillConfig
-  maxGauge: 100
+  maxGauge: 200
   passZoneGain: 20
-  timeSlowCost: 100
+  timeSlowCost: 50
   timeSlowDuration: 2
   timeSlowScale: 0.6
-  shieldCost: 70
+  shieldCost: 100
+  invincibleDuration: 0.5
