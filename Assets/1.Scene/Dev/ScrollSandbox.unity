@@ -1559,6 +1559,7 @@ MonoBehaviour:
   gameOverClip: {fileID: 8300000, guid: e305c0471916e734880f3c52ae4befd8, type: 3}
   happinessClip: {fileID: 8300000, guid: e1db7eb6f1294ca4783cdedc4822d766, type: 3}
   timeSlowClip: {fileID: 8300000, guid: d4ba3030b8a26084abb510744652399d, type: 3}
+  bonkClip: {fileID: 8300000, guid: 9241ffa691fafde469fef9670864e79a, type: 3}
   pitchJitter: 0
 --- !u!82 &700000023
 AudioSource:

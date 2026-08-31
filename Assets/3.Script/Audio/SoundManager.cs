@@ -29,6 +29,9 @@ public sealed class SoundManager : MonoBehaviour
     [Tooltip("희망의 날갯짓 발동 시. PlayerSkillController가 호출한다.")]
     [SerializeField] private AudioClip timeSlowClip;
 
+    [Tooltip("장애물 충돌 시. PlayerCollision이 호출한다.")]
+    [SerializeField] private AudioClip bonkClip;
+
     [Header("Playback")]
     [Tooltip("재생마다 피치를 ±이 값만큼 흔든다. 0이면 끈다. 연타 시 기계적으로 들리는 것을 막는다.")]
     [SerializeField, Range(0f, 0.3f)] private float pitchJitter = 0f;
@@ -74,6 +77,9 @@ public sealed class SoundManager : MonoBehaviour
 
     /// <summary>희망의 날갯짓 발동.</summary>
     public void PlayTimeSlow() => Play(timeSlowClip);
+
+    /// <summary>장애물 충돌.</summary>
+    public void PlayBonk() => Play(bonkClip);
 
     /// <summary>원샷 재생. clip이 null이면 아무 일도 하지 않는다.</summary>
     public void Play(AudioClip clip, float volumeScale = 1f)
