@@ -172,6 +172,10 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2370414337936881525, guid: 3f9c47b8a1d24e6fb05c8e2719d4a63c, type: 3}
+      propertyPath: happinessPrefab
+      value: 
+      objectReference: {fileID: 7191488376518168224, guid: f1cc9f91bf94b7f42a22ebfc6af0204c, type: 3}
+    - target: {fileID: 2370414337936881525, guid: 3f9c47b8a1d24e6fb05c8e2719d4a63c, type: 3}
       propertyPath: 'gatePrefabs.Array.data[0]'
       value: 
       objectReference: {fileID: 1357369418521529319, guid: d7ef2272d787cdc4e83f4bd167b8e4af, type: 3}
@@ -3851,9 +3855,17 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 1190010605760355557, guid: 2257c06818a817c4a9a38e51e189850c, type: 3}
+      propertyPath: shieldVisual
+      value: 
+      objectReference: {fileID: 2097385500}
     - target: {fileID: 3137022364865087612, guid: 2257c06818a817c4a9a38e51e189850c, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5098837195606072650, guid: 2257c06818a817c4a9a38e51e189850c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6545908582906012036, guid: 2257c06818a817c4a9a38e51e189850c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3938,6 +3950,11 @@ MonoBehaviour:
 --- !u!1 &2097385499 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8629093877431005228, guid: 2257c06818a817c4a9a38e51e189850c, type: 3}
+  m_PrefabInstance: {fileID: 2097385497}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2097385500 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5098837195606072650, guid: 2257c06818a817c4a9a38e51e189850c, type: 3}
   m_PrefabInstance: {fileID: 2097385497}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7505442566493510489
