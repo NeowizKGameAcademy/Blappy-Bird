@@ -49,7 +49,12 @@ public sealed class GameOverlayController : MonoBehaviour
     private void HandleStateChanged(GameState state)
     {
         Apply(state);
-        if (state == GameState.GameOver) FillResult();
+
+        if (state == GameState.GameOver)
+        {
+            FillResult();
+            if (SoundManager.Instance != null) SoundManager.Instance.PlayGameOver();
+        }
     }
 
     private void Apply(GameState state)

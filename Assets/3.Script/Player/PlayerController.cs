@@ -75,6 +75,9 @@ public sealed class PlayerController : MonoBehaviour, IRunResettable
         {
             verticalVelocity = config.flapVelocity;
             flapQueued = false;
+
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlayFlap();
         }
         else
         {

@@ -17,6 +17,10 @@ public sealed class HappinessCollectible : MonoBehaviour, IPoolable
         if (HappinessManager.Instance != null)
             HappinessManager.Instance.Add(1);
 
+        // 이 오브젝트는 곧 풀로 돌아가므로 자기 AudioSource로는 재생할 수 없다.
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayHappiness();
+
         if (PoolManager.Instance != null) PoolManager.Instance.Release(gameObject);
         else gameObject.SetActive(false);
     }

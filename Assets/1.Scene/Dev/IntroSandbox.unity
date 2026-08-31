@@ -1182,6 +1182,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clip: {fileID: 8300000, guid: 250112ff208382a47be4f51080e6698c, type: 3}
   volume: 0.5
+  followTimeSlow: 0
+  pitchChangeSpeed: 4
 --- !u!82 &700000013
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1324,6 +1326,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75a3d885d3afa1f4285abdac19c9976b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  flapClip: {fileID: 0}
+  gameOverClip: {fileID: 0}
+  happinessClip: {fileID: 0}
+  timeSlowClip: {fileID: 0}
   pitchJitter: 0
 --- !u!82 &700000023
 AudioSource:

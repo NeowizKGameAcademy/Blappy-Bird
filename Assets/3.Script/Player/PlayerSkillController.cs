@@ -67,6 +67,11 @@ public sealed class PlayerSkillController : MonoBehaviour, IRunResettable
         if (!CanUseTimeSlow) return false;
         if (!gauge.TrySpend(config.timeSlowCost)) return false;
 
+        // 코루틴이 SetTimeSlow를 동기로 걸어버리므로 발동음은 그 앞에서 재생해야
+        // 정상 pitch로 나온다. 게이지 부족으로 실패하면 여기까지 오지 않는다.
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayTimeSlow();
+
         timeSlowRoutine = StartCoroutine(TimeSlowRoutine());
         return true;
     }
