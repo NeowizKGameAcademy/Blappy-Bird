@@ -25,7 +25,17 @@ public sealed class BgmPlayer : MonoBehaviour
     [Tooltip("초당 pitch 변화량. 4면 1.0 -> 0.6 전환에 0.1초 걸린다. 0이면 즉시 바뀌어 글리치로 들린다.")]
     [SerializeField] private float pitchChangeSpeed = 4f;
 
+    [Header("Game Over")]
+    [Tooltip("게임오버 중 볼륨 배율. 1이면 줄이지 않는다.")]
+    [SerializeField, Range(0f, 1f)] private float gameOverVolumeScale = 0.3f;
+
+    [Tooltip("초당 볼륨 변화량. 1이면 0.5 -> 0.15 전환에 0.35초 걸린다.")]
+    [SerializeField] private float volumeChangeSpeed = 1f;
+
     private AudioSource source;
+
+    /// <summary>게임오버 중인지. 볼륨 목표값을 정하는 데만 쓴다.</summary>
+    private bool ducked;
 
     private void Awake()
     {
@@ -46,8 +56,39 @@ public sealed class BgmPlayer : MonoBehaviour
             source.Play();
     }
 
+    private void Start()
+    {
+        // GameManager는 부트스트랩 순서상 Awake 시점에 없을 수 있어 Start에서 붙는다.
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnStateChanged += HandleStateChanged;
+            HandleStateChanged(GameManager.Instance.CurrentState);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnStateChanged -= HandleStateChanged;
+    }
+
+    /// <summary>Retry로 Ready에 돌아가면 자동으로 원래 볼륨으로 복귀한다.</summary>
+    private void HandleStateChanged(GameState state)
+    {
+        ducked = state == GameState.GameOver;
+    }
+
     private void Update()
     {
+        // GameOver는 timeScale을 1로 두므로(연출을 멈추지 않기 위해) 여기서도 unscaled를 쓸 이유는
+        // 슬로우 쪽과 같다. 보간이 슬로우에 끌려가지 않게 한다.
+        float dt = Time.unscaledDeltaTime;
+
+        float targetVolume = volume * (ducked ? gameOverVolumeScale : 1f);
+        source.volume = volumeChangeSpeed > 0f
+            ? Mathf.MoveTowards(source.volume, targetVolume, volumeChangeSpeed * dt)
+            : targetVolume;
+
         if (!followTimeSlow)
             return;
 
@@ -57,16 +98,15 @@ public sealed class BgmPlayer : MonoBehaviour
         // Current(세 채널의 최솟값)를 쓰면 히트스톱 0.1과 Pause 0까지 따라가서
         // BGM이 씹히거나 얼어붙는다. TimeSlow 채널만 본다.
         TimeScaleManager tsm = TimeScaleManager.Instance;
-        float target = tsm != null ? tsm.Get(TimeScaleChannel.TimeSlow) : 1f;
+        float targetPitch = tsm != null ? tsm.Get(TimeScaleChannel.TimeSlow) : 1f;
 
-        if (Mathf.Approximately(source.pitch, target))
+        if (Mathf.Approximately(source.pitch, targetPitch))
             return;
 
-        // 슬로우가 걸린 상태에서 보간까지 느려지지 않도록 unscaled를 쓴다.
         float maxDelta = pitchChangeSpeed > 0f
-            ? pitchChangeSpeed * Time.unscaledDeltaTime
-            : Mathf.Abs(target - source.pitch);
+            ? pitchChangeSpeed * dt
+            : Mathf.Abs(targetPitch - source.pitch);
 
-        source.pitch = Mathf.MoveTowards(source.pitch, target, maxDelta);
+        source.pitch = Mathf.MoveTowards(source.pitch, targetPitch, maxDelta);
     }
 }

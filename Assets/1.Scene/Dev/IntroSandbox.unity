@@ -1184,6 +1184,8 @@ MonoBehaviour:
   volume: 0.5
   followTimeSlow: 0
   pitchChangeSpeed: 4
+  gameOverVolumeScale: 0.3
+  volumeChangeSpeed: 1
 --- !u!82 &700000013
 AudioSource:
   m_ObjectHideFlags: 0
