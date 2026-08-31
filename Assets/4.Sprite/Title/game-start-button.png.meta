@@ -136,34 +136,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: start_normal
+      name: game-start-button_0
       rect:
         serializedVersion: 2
-        x: 39
-        y: 266
-        width: 665
-        height: 215
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: da644e09f1b43034082985d6ca6a1b93
-      internalID: 2108717958
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: start_glow
-      rect:
-        serializedVersion: 2
-        x: 735
-        y: 242
-        width: 703
+        x: 20
+        y: 240
+        width: 700
         height: 260
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -173,20 +151,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 82531aa13f451ee4faace372891ebb5e
-      internalID: -1425084041
+      spriteID: 622faf6680164dd4fb3f0d84d04069ea
+      internalID: -1974068144
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: start_dark
+      name: game-start-button_1
       rect:
         serializedVersion: 2
-        x: 1472
-        y: 266
-        width: 660
-        height: 208
+        x: 736
+        y: 240
+        width: 700
+        height: 260
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -195,8 +173,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b9d11471bb074b14f856e6f489980b62
-      internalID: -1653374861
+      spriteID: b6efd047430d85a4abdd1d96e5beed69
+      internalID: 831878975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: game-start-button_2
+      rect:
+        serializedVersion: 2
+        x: 1451
+        y: 240
+        width: 700
+        height: 260
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ebac3746e13df0645a07b760008e6bec
+      internalID: -1905922983
       vertices: []
       indices: 
       edges: []
@@ -213,11 +213,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":3.0,"y":1.0},"gridSpriteSize":{"x":724.0,"y":724.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      start_dark: -1653374861
-      start_glow: -1425084041
-      start_normal: 2108717958
+      game-start-button_0: -1974068144
+      game-start-button_1: 831878975
+      game-start-button_2: -1905922983
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
