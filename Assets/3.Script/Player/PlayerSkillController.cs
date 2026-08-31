@@ -12,6 +12,9 @@ public sealed class PlayerSkillController : MonoBehaviour, IRunResettable
     [SerializeField] private PlayerSkillConfig config;
     [SerializeField] private GaugeController gauge = new GaugeController();
 
+    [Header("Shield Visual")]
+    [SerializeField] private GameObject shieldVisual;
+
     private Coroutine timeSlowRoutine;
     private float invincibleUntil;
 
@@ -36,7 +39,11 @@ public sealed class PlayerSkillController : MonoBehaviour, IRunResettable
     private void OnEnable() => gauge.OnChanged += RaiseGaugeChanged;
     private void OnDisable() => gauge.OnChanged -= RaiseGaugeChanged;
     private void RaiseGaugeChanged(float v) => OnGaugeChanged?.Invoke(v);
-
+    private void Awake()
+    {
+        if (shieldVisual != null)
+            shieldVisual.SetActive(false);
+    }
     private void Update()
     {
         var kb = Keyboard.current;
@@ -96,6 +103,10 @@ public sealed class PlayerSkillController : MonoBehaviour, IRunResettable
         if (!gauge.TrySpend(config.shieldCost)) return false;
 
         IsShieldActive = true;
+        if (shieldVisual != null)
+        {
+            shieldVisual.SetActive(true);
+        }
         OnShieldChanged?.Invoke();
         return true;
     }
@@ -110,6 +121,10 @@ public sealed class PlayerSkillController : MonoBehaviour, IRunResettable
         if (!IsShieldActive) return false;
 
         IsShieldActive = false;
+        if (shieldVisual != null)
+        {
+            shieldVisual.SetActive(false);
+        }
         invincibleUntil = Time.time + (config != null ? config.invincibleDuration : 0.5f);
         OnShieldChanged?.Invoke();
         return true;
@@ -120,6 +135,10 @@ public sealed class PlayerSkillController : MonoBehaviour, IRunResettable
         EndTimeSlow();
         IsShieldActive = false;
         invincibleUntil = 0f;
+        if (shieldVisual != null)
+        {
+            shieldVisual.SetActive(false);
+        }
         gauge.ResetRun();
         OnShieldChanged?.Invoke();
     }
