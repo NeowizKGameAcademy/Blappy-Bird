@@ -21,9 +21,20 @@ public sealed class GameSceneController : MonoBehaviour
 
     private readonly List<IRunResettable> resettables = new List<IRunResettable>();
 
-    private void Start()
+    /// <summary>
+    /// 부트스트랩은 Awake에서 한다. Start에서 하면 다른 컴포넌트의 Start와
+    /// 실행 순서가 보장되지 않아, 먼저 실행된 쪽(예: RankingManager.Start)이
+    /// 아직 null인 GameManager.Instance를 참조해 NRE가 났다.
+    /// AddComponent는 대상의 Awake를 즉시 실행하므로, 여기서 만들면
+    /// 씬의 어떤 Start보다도 먼저 Instance가 준비된다.
+    /// </summary>
+    private void Awake()
     {
         EnsureBootstrap();
+    }
+
+    private void Start()
+    {
         ResolveReferences();
         CollectResettables();
 

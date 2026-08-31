@@ -78,9 +78,15 @@ public sealed class RankingManager : MonoBehaviour
 
     private void Start()
     {
-        // Awake 시점에는 GameManager가 없을 수 있다 (Dev 씬 부트스트랩 순서)
-        GameManager.Instance.OnStateChanged -= HandleStateChanged;
-        GameManager.Instance.OnStateChanged += HandleStateChanged;
+        // GameManager는 GameSceneController.Awake가 만들므로 여기서는 존재한다.
+        // 단 GameSceneController가 없는 씬(예: WorldSystems 프리팹만 놓인 경우)도
+        // 있을 수 있으니 없으면 기록 없이 동작한다.
+        var gm = GameManager.Instance;
+        if (gm != null)
+        {
+            gm.OnStateChanged -= HandleStateChanged;   // OnEnable과의 중복 구독 방지
+            gm.OnStateChanged += HandleStateChanged;
+        }
         OnBestTimeChanged?.Invoke(BestTime);
     }
 
