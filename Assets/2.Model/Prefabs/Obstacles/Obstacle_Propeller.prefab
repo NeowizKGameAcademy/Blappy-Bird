@@ -964,7 +964,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PropellerController
   direction: 0
-  rotationSpeed: 90
+  rotationSpeed: 60
   pivotYOffset: -7
 --- !u!1 &8857785962557293635
 GameObject:
