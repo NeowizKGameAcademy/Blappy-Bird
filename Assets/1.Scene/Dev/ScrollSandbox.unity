@@ -2388,12 +2388,9 @@ MonoBehaviour:
   timeText: {fileID: 1701560930}
   bestText: {fileID: 1456207612}
   happyText: {fileID: 1735384075}
-  gaugeFrame: {fileID: 1375489536}
   gaugeFill: {fileID: 1621078729}
   slowIcon: {fileID: 1796792458}
   shieldIcon: {fileID: 47619688}
-  frameNormal: {fileID: 344387409, guid: b3c22a1ffb5ce88498b771f265cda7ab, type: 3}
-  frameReady: {fileID: 2067974220, guid: b3c22a1ffb5ce88498b771f265cda7ab, type: 3}
 --- !u!4 &1282699026
 Transform:
   m_ObjectHideFlags: 0
