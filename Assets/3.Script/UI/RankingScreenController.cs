@@ -98,20 +98,14 @@ public sealed class RankingScreenController : MonoBehaviour
             SetText(row, "HappyText", entry.happiness.ToString());
         }
 
-        // MY BEST는 항목별 최댓값이다.
-        // 정렬 1순위가 happiness이므로 rankings[0]은 최고 행복이지 최고 시간이 아니다.
-        // 시간은 Top10에서 밀려난 판까지 포함하는 bestSurvivalTime을 쓴다.
-        if (myHappinessText != null)
-            myHappinessText.text = data.rankings[0].happiness.ToString();
-
-        if (myBestText != null)
-        {
-            float bestTime = data.bestSurvivalTime;
-            foreach (var entry in data.rankings)          // 구버전 파일 대비
-                if (entry.survivalTime > bestTime) bestTime = entry.survivalTime;
-
-            myBestText.text = FormatTime(bestTime);
-        }
+        // MY BEST는 1위 런을 통째로 보여준다. 플레이어가 YOU 하나뿐이라
+        // 항목별 최댓값(최고 시간 + 최고 행복)을 조합하면 서로 다른 판의
+        // 수치가 섞여 실제로 없었던 기록처럼 읽힌다. 1위가 곧 현재 기준
+        // (행복, 동률 시 시간)의 내 최고 런이다.
+        // 인게임 HUD의 BEST는 타이머 옆이라 계속 최고 시간(BestTime)을 쓴다.
+        var best = data.rankings[0];
+        if (myBestText != null) myBestText.text = FormatTime(best.survivalTime);
+        if (myHappinessText != null) myHappinessText.text = best.happiness.ToString();
     }
 
     private static void SetText(GameObject row, string child, string value)
