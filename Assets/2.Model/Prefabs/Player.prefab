@@ -549,6 +549,7 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: a384177dd425b9945a3ce37853ce4b34, type: 2}
   gauge:
     current: 0
+  shieldVisual: {fileID: 0}
 --- !u!114 &303907354298993299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -891,6 +892,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6545908582906012036}
+  - component: {fileID: 7693346558427746657}
   m_Layer: 0
   m_Name: CameraTarget
   m_TagString: Untagged
@@ -913,6 +915,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8121325484234892888}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7693346558427746657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7968758405785899528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef4833adf709a2344a56b19336ab4770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraFollowTarget
+  player: {fileID: 8121325484234892888}
+  movementConfig: {fileID: 11400000, guid: 80d7c07b5a2aa734aa6c94286574f01b, type: 2}
+  horizontalMargin: 6
+  verticalMargin: 8
 --- !u!1 &8629093877431005228
 GameObject:
   m_ObjectHideFlags: 0
