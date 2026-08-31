@@ -6,7 +6,8 @@ using UnityEngine.UI;
 /// <summary>
 /// 랭킹 화면 (기획서 15, 16).
 /// ranking.json을 읽어 Top10 목록을 만든다. 정렬은 저장 시점에 이미
-/// survivalTime DESC / happiness DESC로 되어 있으므로 그대로 표시한다.
+/// happiness DESC / survivalTime DESC로 되어 있으므로 그대로 표시한다.
+/// 기준은 RankingManager.Compare 한 곳에서만 정한다.
 ///
 /// 행 3상태: 홀수 행 밝게, 짝수 행 파랗게 교대하고
 /// 가장 최근 플레이 기록은 네온 행으로 강조한다.
@@ -97,10 +98,20 @@ public sealed class RankingScreenController : MonoBehaviour
             SetText(row, "HappyText", entry.happiness.ToString());
         }
 
-        // 내 최고 기록 (정렬 1위가 곧 최고 생존 시간)
-        var best = data.rankings[0];
-        if (myBestText != null) myBestText.text = FormatTime(best.survivalTime);
-        if (myHappinessText != null) myHappinessText.text = best.happiness.ToString();
+        // MY BEST는 항목별 최댓값이다.
+        // 정렬 1순위가 happiness이므로 rankings[0]은 최고 행복이지 최고 시간이 아니다.
+        // 시간은 Top10에서 밀려난 판까지 포함하는 bestSurvivalTime을 쓴다.
+        if (myHappinessText != null)
+            myHappinessText.text = data.rankings[0].happiness.ToString();
+
+        if (myBestText != null)
+        {
+            float bestTime = data.bestSurvivalTime;
+            foreach (var entry in data.rankings)          // 구버전 파일 대비
+                if (entry.survivalTime > bestTime) bestTime = entry.survivalTime;
+
+            myBestText.text = FormatTime(bestTime);
+        }
     }
 
     private static void SetText(GameObject row, string child, string value)
