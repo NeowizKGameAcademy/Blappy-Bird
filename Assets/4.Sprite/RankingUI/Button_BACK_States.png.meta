@@ -139,10 +139,10 @@ TextureImporter:
       name: back_normal
       rect:
         serializedVersion: 2
-        x: 46
-        y: 265
-        width: 464
-        height: 242
+        x: 27
+        y: 208
+        width: 500
+        height: 360
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -161,10 +161,10 @@ TextureImporter:
       name: back_glow
       rect:
         serializedVersion: 2
-        x: 549
+        x: 534
         y: 208
-        width: 473
-        height: 358
+        width: 500
+        height: 360
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -183,10 +183,10 @@ TextureImporter:
       name: back_dark
       rect:
         serializedVersion: 2
-        x: 1063
-        y: 265
-        width: 458
-        height: 234
+        x: 1045
+        y: 203
+        width: 500
+        height: 360
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -205,10 +205,10 @@ TextureImporter:
       name: back_disabled
       rect:
         serializedVersion: 2
-        x: 1564
-        y: 259
-        width: 469
-        height: 247
+        x: 1550
+        y: 207
+        width: 500
+        height: 360
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

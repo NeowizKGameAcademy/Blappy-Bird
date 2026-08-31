@@ -139,13 +139,13 @@ TextureImporter:
       name: row_light
       rect:
         serializedVersion: 2
-        x: 33
+        x: 0
         y: 653
-        width: 1606
+        width: 1672
         height: 208
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 125, y: 70, z: 125, w: 70}
       customData: 
       outline: []
       physicsShape: []
@@ -161,13 +161,13 @@ TextureImporter:
       name: row_blue
       rect:
         serializedVersion: 2
-        x: 33
+        x: 0
         y: 375
-        width: 1606
+        width: 1672
         height: 209
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 125, y: 70, z: 125, w: 70}
       customData: 
       outline: []
       physicsShape: []
@@ -183,13 +183,13 @@ TextureImporter:
       name: row_recent
       rect:
         serializedVersion: 2
-        x: 16
-        y: 84
-        width: 1640
-        height: 236
+        x: 2
+        y: 96
+        width: 1670
+        height: 211
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 125, y: 70, z: 125, w: 70}
       customData: 
       outline: []
       physicsShape: []
