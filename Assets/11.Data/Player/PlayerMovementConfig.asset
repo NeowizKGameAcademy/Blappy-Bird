@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0f38e5cd07c6ba488008736d3b2a3be, type: 3}
   m_Name: PlayerMovementConfig
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementConfig
-  flapVelocity: 6.2
+  flapVelocity: 10
   customGravity: -18
   maxFallSpeed: -11
   horizontalAccel: 28
